@@ -1,9 +1,85 @@
+/* -------------------------------------------------
+   Basic layout
+   ------------------------------------------------- */
+body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  background: #fafafa;
+  color: #222;
+}
+main {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
 
+/* -------------------------------------------------
+   Quiz elements
+   ------------------------------------------------- */
+.question {
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
+}
+.question h3 {
+  margin: 0 0 .5rem;
+}
+.options label {
+  display: block;
+  margin: .3rem 0;
+  cursor: pointer;
+}
+.options input {
+  margin-right: .6rem;
+}
+
+/* -------------------------------------------------
+   Buttons
+   ------------------------------------------------- */
+button {
+  background: #0066ff;
+  color: #fff;
+  border: none;
+  padding: .6rem 1.2rem;
+  border-radius: .3rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+button:hover { background: #0052cc; }
+
+/* -------------------------------------------------
+   Hidden sections
+   ------------------------------------------------- */
+.hidden { display: none; }
+
+/* -------------------------------------------------
+   Result styling
+   ------------------------------------------------- */
+#score {
+  font-size: 1.4rem;
+  margin: 1rem 0;
+}
+
+/* -------------------------------------------------
+   Review table
+   ------------------------------------------------- */
+.review-item {
+  margin: .8rem 0;
+  padding: .6rem;
+  border: 1px solid #ddd;
+  border-radius: .3rem;
+}
+.correct { color: #0a0; }
+.wrong   { color: #c00; }
 3️⃣ script.js
 /* -------------------------------------------------
-   Sentient Foundation Quiz – vanilla JS
+   Sentient Foundation Quiz – vanilla JavaScript
    ------------------------------------------------- */
 
+/* ---------- 1️⃣ QUESTIONS ----------
+   Keep the order exactly as you posted.
+   The `ans` field stores the correct letter (A‑D). */
 const questions = [
   {
     q: "1. In which year was Sentient Foundation founded?",
@@ -101,12 +177,3 @@ const questions = [
     ans: "A"
   },
   {
-    q: "15. In the $SENT token economy, what does staking on an “artifact” accomplish?",
-    opts: [
-      "A) Grants voting rights in Sentient’s board",
-      "B) Directs a larger share of token emissions to that artifact and yields rewards",
-      "C) Unlocks premium GRID features for the staker",
-      "D) Converts the token into a stablecoin"
-    ],
-    ans: "B"
-  },
