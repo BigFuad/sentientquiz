@@ -1,162 +1,62 @@
-/* -------------------------------------------------
-   Global Styles
-   ------------------------------------------------- */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
+/* ---------- basic layout ---------- */
 body {
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
   margin: 0;
-  font-family: 'Inter', system-ui, sans-serif;
-  background: #f4f7fb;
-  color: #111;
-  line-height: 1.6;
+  background: #fafafa;
+  color: #222;
 }
-
-/* -------------------------------------------------
-   Layout
-   ------------------------------------------------- */
-.container {
-  max-width: 900px;
+main {
+  max-width: 800px;
   margin: 2rem auto;
-  padding: 1.5rem;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.06);
+  padding: 0 1rem;
 }
 
-/* -------------------------------------------------
-   Header
-   ------------------------------------------------- */
-h1 {
-  text-align: center;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #2c3e50;
-}
-
-/* -------------------------------------------------
-   Quiz Items
-   ------------------------------------------------- */
+/* ---------- quiz elements ---------- */
 .question {
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.8rem;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 1rem;
 }
-
-.question h2 {
-  font-size: 1.1rem;
-  margin: 0 0 .4rem;
-  font-weight: 600;
-  color: #34495e;
+.question h3 {
+  margin: 0 0 .5rem;
 }
-
-/* Options – radio buttons hidden, custom UI */
-.options {
-  display: grid;
-  gap: .5rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-.option {
-  display: flex;
-  align-items: center;
-  padding: .5rem 1rem;
-  border: 2px solid #dce0e5;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all .2s;
-  background: #fafbfc;
-}
-
-.option:hover {
-  border-color: #a0b4d8;
-  background: #f0f5ff;
-}
-
-/* hide the real radio */
-.option input[type="radio"] {
-  opacity: 0;
-  position: absolute;
-}
-
-/* custom check indicator */
-.option::before {
-  content: "";
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid #7f8c9a;
-  border-radius: 50%;
-  margin-right: .75rem;
-  transition: border-color .2s, background .2s;
-}
-
-/* checked state */
-.option input[type="radio"]:checked + label::before {
-  border-color: #2d9cdb;
-  background: #2d9cdb;
-}
-
-/* label styling */
-.option label {
+.options label {
+  display: block;
+  margin: .3rem 0;
   cursor: pointer;
 }
-
-/* -------------------------------------------------
-   Buttons
-   ------------------------------------------------- */
-.actions {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 2rem;
+.options input {
+  margin-right: .6rem;
 }
 
+/* ---------- buttons ---------- */
 button {
-  padding: .75rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  background: #0066ff;
+  color: #fff;
   border: none;
-  border-radius: 8px;
+  padding: .6rem 1.2rem;
+  border-radius: .3rem;
   cursor: pointer;
-  transition: background .2s;
+  font-size: 1rem;
+}
+button:hover { background: #0052cc; }
+
+/* ---------- hidden sections ---------- */
+.hidden { display: none; }
+
+/* ---------- result styling ---------- */
+#score {
+  font-size: 1.4rem;
+  margin: 1rem 0;
 }
 
-#submitBtn {
-  background: #27ae60;
-  color: #fff;
+/* ---------- review table ---------- */
+.review-item {
+  margin: .8rem 0;
+  padding: .6rem;
+  border: 1px solid #ddd;
+  border-radius: .3rem;
 }
-#submitBtn:hover { background: #219150; }
-
-#resetBtn {
-  background: #c0392b;
-  color: #fff;
-}
-#resetBtn:hover { background: #a93226; }
-
-button.hidden { display: none; }
-
-/* -------------------------------------------------
-   Result Section
-   ------------------------------------------------- */
-#result {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 8px;
-  background: #eaf4ff;
-  border-left: 6px solid #2d9cdb;
-}
-
-#result h2 {
-  margin-top: 0;
-  color: #2c3e50;
-}
-
-/* feedback per question */
-.feedback {
-  margin-top: .4rem;
-  font-size: .9rem;
-  font-weight: 500;
-}
-.correct   { color: #27ae60; }
-.incorrect { color: #c0392b; }
+.correct { color: #0a0; }
+.wrong   { color: #c00; }
