@@ -1,26 +1,75 @@
+/* ==============================================================
+   ── Global variables
+   ============================================================== */
+:root {
+  /* Colors */
+  --c-primary: #ff4fbf;
+  --c-primary-dark: #ff249e;
+  --c-accent: #ffb3df;
+  --c-bg-light: #fff;
+  --c-bg-dark: #1e1e1e;
+  --c-text-light: #333;
+  --c-text-dark: #e0e0e0;
+
+  /* Typography */
+  --f-base: 'Poppins', sans-serif;
+  --fs-base: clamp(0.9rem, 1vw + 0.5rem, 1.1rem);
+  --fs-title: clamp(1.5rem, 2vw + 0.5rem, 2rem);
+  --fs-result: clamp(1.8rem, 3vw + 0.5rem, 2.5rem);
+
+  /* Layout */
+  --radius: 10px;
+  --radius-card: 20px;
+  --gap: 15px;
+  --pad-card: 2.5rem;
+}
+
+/* ==============================================================
+   ── Dark‑mode (auto)
+   ============================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-bg-light: var(--c-bg-dark);
+    --c-text-light: var(--c-text-dark);
+    --c-accent: #ff99c9;
+    --c-primary: #ff71c5;
+    --c-primary-dark: #ff4fa2;
+  }
+}
+
+/* ==============================================================
+   ── Base page styling
+   ============================================================== */
+html,
 body {
+  height: 100%;
   margin: 0;
-  font-family: "Poppins", sans-serif;
+}
+body {
+  font-family: var(--f-base);
   background: linear-gradient(135deg, #ffe6f1, #ffd2eb);
-  color: #333;
+  color: var(--c-text-light);
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  overflow: hidden;
+  overflow-y: auto;               /* keep scroll when needed */
+  min-height: 100vh;              /* avoid cutting off on short viewports */
 }
 
+/* Canvas for confetti – stays fixed but doesn’t interfere */
 canvas#confetti {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   pointer-events: none;
 }
 
+/* ==============================================================
+   ── Card container
+   ============================================================== */
 .container {
-  background: white;
-  border-radius: 20px;
-  padding: 40px;
+  background: var(--c-bg-light);
+  border-radius: var(--radius-card);
+  padding: var(--pad-card);
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   text-align: center;
   width: 90%;
@@ -29,79 +78,115 @@ canvas#confetti {
   z-index: 1;
 }
 
-h1, h2 {
-  color: #ff4fbf;
+/* Headings */
+h1,
+h2 {
+  color: var(--c-primary);
+  margin: 0 0 0.5em;
 }
 
+/* ==============================================================
+   ── Form elements
+   ============================================================== */
 input {
-  width: 80%;
-  padding: 10px;
-  border: 2px solid #ffb3df;
-  border-radius: 10px;
-  font-size: 1em;
-  margin: 15px 0;
+  width: 100%;
+  max-width: 80%;
+  padding: 0.6em;
+  border: 2px solid var(--c-accent);
+  border-radius: var(--radius);
+  font-size: var(--fs-base);
+  margin: 1rem 0;
+  box-sizing: border-box;
 }
 
+/* Button – primary action */
 button {
-  background-color: #ff4fbf;
-  color: white;
+  background: var(--c-primary);
+  color: #fff;
   border: none;
-  padding: 12px 20px;
-  border-radius: 10px;
+  padding: 0.75em 1.25em;
+  border-radius: var(--radius);
   cursor: pointer;
-  font-size: 1em;
-  transition: 0.3s;
+  font-size: var(--fs-base);
+  transition: background 0.3s ease;
 }
 
-button:hover {
-  background-color: #ff249e;
+/* Hover/focus states */
+button:hover,
+button:focus-visible {
+  background: var(--c-primary-dark);
 }
 
-.screen.hidden {
-  display: none;
-}
-
-/* ==== FIXED OPTIONS LAYOUT ==== */
+/* ==============================================================
+   ── Options grid
+   ============================================================== */
 #options {
   display: grid;
-  grid-template-columns: 1fr 1fr; /* two per row */
-  gap: 15px;
-  justify-items: stretch;
-  margin-top: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--gap);
+  margin-top: 1.5rem;
 }
 
+/* Individual option */
 .option {
-  border: 2px solid #ffb3df;
-  border-radius: 10px;
-  padding: 10px 15px;
+  border: 2px solid var(--c-accent);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
   cursor: pointer;
-  transition: 0.3s;
+  transition: background 0.3s, border-color 0.3s;
   text-align: left;
   font-size: 0.95em;
 }
 
-.option:hover {
-  background-color: #ffe0f2;
+/* Hover / focus */
+.option:hover,
+.option:focus-visible {
+  background: #ffe0f2;
 }
 
+/* Selected state */
 .option.selected {
-  background-color: #ffb3df;
-  color: white;
-  border-color: #ff4fbf;
+  background: var(--c-accent);
+  color: #fff;
+  border-color: var(--c-primary);
 }
 
+/* ==============================================================
+   ── Navigation
+   ============================================================== */
 .nav {
-  margin-top: 25px;
+  margin-top: 1.5rem;
   display: flex;
   justify-content: space-between;
 }
 
+/* Result */
 .result h2 {
-  font-size: 2em;
+  font-size: var(--fs-result);
 }
 
+/* ==============================================================
+   ── Utility classes
+   ============================================================== */
+.screen.hidden {
+  display: none;
+}
+
+/* ==============================================================
+   ── Responsive tweaks
+   ============================================================== */
 @media (max-width: 500px) {
   #options {
-    grid-template-columns: 1fr; /* stack vertically on small screens */
+    grid-template-columns: 1fr; /* vertical stack on narrow screens */
+  }
+}
+
+/* ==============================================================
+   ── Respect reduced motion preferences
+   ============================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
   }
 }
