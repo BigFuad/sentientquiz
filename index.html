@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentient Quiz</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+
+  <div class="container">
+    <!-- START SCREEN -->
+    <div id="start-screen" class="screen active">
+      <h1>Sentient Quiz</h1>
+      <input type="text" id="username" placeholder="Enter your username" />
+      <button id="start-btn">Begin Quiz</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz-screen" class="screen">
+      <h2 id="question"></h2>
+      <div id="options"></div>
+      <div class="nav">
+        <button id="prev-btn">Previous</button>
+        <button id="next-btn">Next</button>
+      </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result-screen" class="screen">
+      <h2 id="result-title"></h2>
+      <p id="score-text"></p>
+      <button id="view-answers-btn">View Answers</button>
+      <button id="restart-btn">Restart</button>
+    </div>
+
+    <!-- REVIEW SCREEN -->
+    <div id="review-screen" class="screen">
+      <h2>Answer Review</h2>
+      <div id="answers-review"></div>
+      <button id="back-btn">Back to Result</button>
+    </div>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      { q: "GRID", options: ["Global Resource and Information Database", "General Research and information Directory", "General research and Intelligence Dashboard", "Global research and intelligence Directory"], correct: 3 },
+      { q: "ROMA", options: ["Recalling open meta agents", "Recursive open Meta Agents", "Reoccurring Open Monitoring Agents", "Recursive Operational Meta agents"], correct: 1 },
+      { q: "ODS", options: ["Open Deep Service", "Open Discovery Service", "Open deep search", "Optimized Deep Scanner"], correct: 2 },
+      { q: "ORA", options: ["Open reasoning agent", "Open Retrieval Agent", "open Reasoning Application", "Open Response Analyzer"], correct: 0 },
+      { q: "OST", options: ["Operational Search Tool", "Open System Tool", "Online Search Tool", "Open search tool"], correct: 3 },
+      { q: "LLM", options: ["Large Learning Machine", "Large language models", "Local language Model", "Local learning  model"], correct: 1 },
+      { q: "SPIN", options: ["Systemic planning, Interaction and Negotiation", "Strategic Performance, Interaction and Negotiation", "Simulation Planning, Interface and Network", "Strategic Planning, Interaction and Negotiation"], correct: 3 },
+      { q: "PDDL", options: ["Plan Defined Domain Language", "Parallel Programming Design Language", "Planning Domain Definition Language", "Predictive Domain Defined Language"], correct: 2 },
+      { q: "LCB", options: ["Life Code Bench", "Live Code Bench", "Live Code Branch", "Live Coding Builder"], correct: 1 },
+      { q: "OML", options: ["Open Modeling Language", "Operational Monetizable and Loyal", "Open Management Layer", "Open Monetizable and Loyal"], correct: 3 },
+    ];
+
+    let current = 0;
+    let answers = [];
+    let username = "";
+
+    const startScreen = document.getElementById("start-screen");
+    const quizScreen = document.getElementById("quiz-screen");
+    const resultScreen = document.getElementById("result-screen");
+    const reviewScreen = document.getElementById("review-screen");
+    const questionEl = document.getElementById("question");
+    const optionsEl = document.getElementById("options");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const startBtn = document.getElementById("start-btn");
+    const restartBtn = document.getElementById("restart-btn");
+    const viewAnswersBtn = document.getElementById("view-answers-btn");
+    const backBtn = document.getElementById("back-btn");
+    const resultTitle = document.getElementById("result-title");
+    const scoreText = document.getElementById("score-text");
+    const answersReview = document.getElementById("answers-review");
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    function showQuestion() {
+      const q = QUESTIONS[current];
+      questionEl.textContent = `${current + 1}. ${q.q}`;
+      optionsEl.innerHTML = "";
+      q.options.forEach((opt, i) => {
+        const div = document.createElement("div");
+        div.className = "option";
+        if (answers[current] === i) div.classList.add("selected");
+        div.textContent = `${String.fromCharCode(65 + i)}. ${opt}`;
+        div.onclick = () => {
+          answers[current] = i;
+          showQuestion();
+        };
+        optionsEl.appendChild(div);
+      });
+
+      prevBtn.style.display = current > 0 ? "inline-block" : "none";
+      nextBtn.textContent = current < QUESTIONS.length - 1 ? "Next" : "Finish";
+    }
+
+    function startQuiz() {
+      username = document.getElementById("username").value.trim();
+      if (!username) return alert("Please enter a username");
+      startScreen.classList.remove("active");
+      quizScreen.classList.add("active");
+      showQuestion();
+    }
+
+    function nextQuestion() {
+      if (answers[current] === undefined)
+        return alert("Please select an answer before proceeding");
+      if (current < QUESTIONS.length - 1) {
+        current++;
+        showQuestion();
+      } else {
+        finishQuiz();
+      }
+    }
+
+    function prevQuestion() {
+      if (current > 0) {
+        current--;
+        showQuestion();
+      }
+    }
+
+    function finishQuiz() {
+      const score = QUESTIONS.filter((q, i) => q.correct === answers[i]).length;
+      let title =
+        score === 10
+          ? "🎉 Sentient OG"
+          : score >= 7
+          ? "🔥 Sentient Maxi"
+          : score >= 4
+          ? "💫 Sentient Noob"
+          : "🌱 Sentient Rookie";
+
+      quizScreen.classList.remove("active");
+      resultScreen.classList.add("active");
+      resultTitle.textContent = title;
+      scoreText.textContent = `${username}, you scored ${score}/10`;
+
+      if (score === 10) triggerConfetti();
+    }
+
+    function showAnswerReview() {
+      answersReview.innerHTML = "";
+      QUESTIONS.forEach((q, i) => {
+        const userAns = answers[i];
+        const correctAns = q.correct;
+        const questionBlock = document.createElement("div");
+        questionBlock.className = "review-item";
+
+        const qTitle = document.createElement("p");
+        qTitle.innerHTML = `<strong>${i + 1}. ${q.q}</strong>`;
+        questionBlock.appendChild(qTitle);
+
+        q.options.forEach((opt, j) => {
+          const optDiv = document.createElement("div");
+          optDiv.className = "option-review";
+          optDiv.textContent = `${String.fromCharCode(65 + j)}. ${opt}`;
+
+          if (j === correctAns) optDiv.classList.add("correct");
+          if (userAns === j && userAns !== correctAns)
+            optDiv.classList.add("wrong");
+
+          questionBlock.appendChild(optDiv);
+        });
+
+        answersReview.appendChild(questionBlock);
+      });
+    }
+
+    function restartQuiz() {
+      answers = [];
+      current = 0;
+      resultScreen.classList.remove("active");
+      startScreen.classList.add("active");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function triggerConfetti() {
+      const pieces = [];
+      const colors = ["#ff6bcb", "#ffd6e7", "#ff9acb", "#ffffff"];
+
+      for (let i = 0; i < 150; i++) {
+        pieces.push({
+          x: canvas.width / 2,
+          y: canvas.height / 4,
+          vx: (Math.random() - 0.5) * 10,
+          vy: Math.random() * -8 - 2,
+          size: Math.random() * 6 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+        });
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let p of pieces) {
+          p.vy += 0.2;
+          p.x += p.vx;
+          p.y += p.vy;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    // Button logic
+    startBtn.onclick = startQuiz;
+    nextBtn.onclick = nextQuestion;
+    prevBtn.onclick = prevQuestion;
+    restartBtn.onclick = restartQuiz;
+
+    viewAnswersBtn.onclick = () => {
+      resultScreen.classList.remove("active");
+      reviewScreen.classList.add("active");
+      showAnswerReview();
+    };
+
+    backBtn.onclick = () => {
+      reviewScreen.classList.remove("active");
+      resultScreen.classList.add("active");
+    };
+  </script>
+</body>
+</html>
